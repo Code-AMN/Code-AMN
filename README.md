@@ -1,1 +1,1 @@
-https://Code-AMN.github.io/
+Code-AMN.github.io
