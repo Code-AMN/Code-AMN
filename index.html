@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoRegistrator - Автоматическая регистрация в каталогах</title>
+    <style>
+        :root {
+            --primary-color: #4a6bff;
+            --secondary-color: #3a56d4;
+            --accent-color: #ff6b6b;
+            --light-color: #f8f9fa;
+            --dark-color: #2b2d42;
+            --success-color: #4caf50;
+            --gradient: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+        body {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            line-height: 1.7;
+        }
+
+        header {
+            background: var(--gradient);
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #fff, #e0e0e0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 2rem;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+        }
+
+        nav ul li a:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .hero {
+            background: var(--gradient), url('https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            padding: 0 2rem;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            opacity: 0.9;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+            font-size: 1.1rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.5);
+        }
+
+        .btn-primary {
+            background-color: white;
+            color: var(--primary-color);
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            background-color: #f0f0f0;
+            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.4);
+        }
+
+        section {
+            padding: 5rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--dark-color);
+            font-size: 2.5rem;
+            font-weight: 700;
+            position: relative;
+        }
+
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--gradient);
+            margin: 1rem auto 0;
+            border-radius: 2px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .feature-card {
+            background-color: white;
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            transition: all 0.4s;
+            border: 1px solid rgba(0, 0, 0, 0.03);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark-color);
+        }
+
+        .feature-card p {
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-btn {
+            background: var(--gradient);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.8rem;
+            border-radius: 50px;
+            cursor: default;
+            margin-top: 1rem;
+            font-weight: 500;
+            display: inline-block;
+            text-decoration: none;
+            opacity: 0.7;
+            box-shadow: 0 4px 15px rgba(74, 107, 255, 0.3);
+        }
+
+        .pricing {
+            background-color: #f5f7ff;
+        }
+
+        .pricing-plans {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .pricing-card {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            text-align: center;
+            transition: all 0.4s;
+            border: 1px solid rgba(0, 0, 0, 0.03);
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .pricing-header {
+            background: var(--gradient);
+            color: white;
+            padding: 2rem;
+        }
+
+        .pricing-header h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .price {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 1rem 0;
+        }
+
+        .price span {
+            font-size: 1rem;
+            font-weight: normal;
+        }
+
+        .pricing-body {
+            padding: 2.5rem;
+        }
+
+        .pricing-body ul {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .pricing-body ul li {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #eee;
+            color: #666;
+        }
+
+        .progress-container {
+            margin: 3rem auto;
+            max-width: 800px;
+            background-color: white;
+            padding: 3rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.03);
+        }
+
+        .progress-bar {
+            height: 20px;
+            background-color: #eee;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background: var(--gradient);
+            width: 0;
+            transition: width 0.5s ease-in-out;
+        }
+
+        .progress-text {
+            text-align: center;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .add-catalog {
+            background-color: white;
+            padding: 3rem;
+            border-radius: 15px;
+            margin-top: 3rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.03);
+        }
+
+        .add-catalog h3 {
+            margin-bottom: 1.5rem;
+            color: var(--dark-color);
+            font-size: 1.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(74, 107, 255, 0.2);
+            outline: none;
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* Стили для платежной системы */
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .payment-card {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            transition: all 0.4s;
+            border: 1px solid rgba(0, 0, 0, 0.03);
+        }
+
+        .payment-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .payment-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .payment-btn {
+            background: var(--gradient);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-block;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(74, 107, 255, 0.3);
+        }
+
+        .payment-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(74, 107, 255, 0.4);
+        }
+
+        .payment-form {
+            max-width: 500px;
+            margin: 3rem auto;
+            background: white;
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: none;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .payment-form.active {
+            display: block;
+        }
+
+        .payment-form h3 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--dark-color);
+        }
+
+        .payment-form .btn {
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 4rem 0 2rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            text-align: left;
+            margin-bottom: 3rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            color: white;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-section ul li a {
+            color: #bbb;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section ul li a:hover {
+            color: white;
+        }
+
+        .copyright {
+            padding-top: 2rem;
+            border-top: 1px solid #444;
+            font-size: 0.9rem;
+            color: #bbb;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            nav ul {
+                margin-top: 1.5rem;
+                justify-content: center;
+            }
+
+            nav ul li {
+                margin: 0 0.5rem;
+            }
+
+            .hero {
+                height: auto;
+                padding: 6rem 0;
+            }
+
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">AutoRegistrator</div>
+            <nav>
+                <ul>
+                    <li><a href="#features">Возможности</a></li>
+                    <li><a href="#pricing">Тарифы</a></li>
+                    <li><a href="#registration">Регистрация</a></li>
+                    <li><a href="#payment">Оплата</a></li>
+                    <li><a href="#add-catalog">Добавить каталог</a></li>
+                    <li><a href="#contacts">Контакты</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Автоматическая регистрация в каталогах</h1>
+            <p>Увеличьте посещаемость вашего сайта с помощью нашей уникальной системы автоматической регистрации</p>
+            <a href="#registration" class="btn btn-primary">Начать регистрацию</a>
+        </div>
+    </section>
+
+    <section id="features" class="container">
+        <h2 class="section-title">Наши возможности</h2>
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Большая база каталогов</h3>
+                <p>База данных с более чем 10,000 проверенных каталогов и досок объявлений</p>
+                <span class="feature-btn">Примеры каталогов</span>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Быстрая регистрация</h3>
+                <p>Автоматическая регистрация вашего сайта в сотнях каталогов за считанные минуты</p>
+                <span class="feature-btn">Доля регистрации</span>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📈</div>
+                <h3>Отчет о работе</h3>
+                <p>Подробный отчет о проделанной работе с статистикой и результатами</p>
+                <span class="feature-btn">Скачать образец</span>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">👁️</div>
+                <h3>Визуальный прогресс</h3>
+                <p>Наглядное отображение процесса регистрации в реальном времени</p>
+                <span class="feature-btn">Посмотреть демо</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="pricing" class="pricing">
+        <div class="container">
+            <h2 class="section-title">Наши тарифы</h2>
+            <div class="pricing-plans">
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>Малый</h3>
+                        <div class="price">990 <span>руб.</span></div>
+                    </div>
+                    <div class="pricing-body">
+                        <ul>
+                            <li>Регистрация в 25% каталогов</li>
+                            <li>До 3 сайтов</li>
+                            <li>Проверка на живучесть</li>
+                            <li>Отчет о работе</li>
+                            <li>Поддержка 24/7</li>
+                        </ul>
+                        <a href="#registration" class="btn">Выбрать тариф</a>
+                    </div>
+                </div>
+                <div class="pricing-card">
+                    <div class="pricing-header" style="background: linear-gradient(135deg, #3a56d4, #2a42b0);">
+                        <h3>Средний</h3>
+                        <div class="price">1990 <span>руб.</span></div>
+                    </div>
+                    <div class="pricing-body">
+                        <ul>
+                            <li>Регистрация в 45% каталогов</li>
+                            <li>До 10 сайтов</li>
+                            <li>Проверка на живучесть</li>
+                            <li>Подробный отчет</li>
+                            <li>Приоритетная поддержка</li>
+                        </ul>
+                        <a href="#registration" class="btn btn-primary">Выбрать тариф</a>
+                    </div>
+                </div>
+                <div class="pricing-card">
+                    <div class="pricing-header" style="background: linear-gradient(135deg, #ff6b6b, #e05555);">
+                        <h3>Максимальный</h3>
+                        <div class="price">3990 <span>руб.</span></div>
+                    </div>
+                    <div class="pricing-body">
+                        <ul>
+                            <li>Регистрация в 100% каталогов</li>
+                            <li>Неограниченное количество сайтов</li>
+                            <li>Полная проверка на живучесть</li>
+                            <li>Детализированный отчет</li>
+                            <li>VIP поддержка</li>
+                        </ul>
+                        <a href="#registration" class="btn">Выбрать тариф</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="payment" class="container">
+        <h2 class="section-title">Пополнение баланса</h2>
+
+        <div class="payment-methods">
+            <div class="payment-card">
+                <div class="payment-icon">💳</div>
+                <h3>Банковская карта</h3>
+                <p>Оплата картами Visa, Mastercard, Мир через безопасный платежный шлюз</p>
+                <button class="payment-btn" onclick="showCardPaymentForm()">Оплатить картой</button>
+            </div>
+
+            <div class="payment-card">
+                <div class="payment-icon">📱</div>
+                <h3>СБП (Система быстрых платежей)</h3>
+                <p>Мгновенная оплата через ваш банк по номеру телефона</p>
+                <button class="payment-btn" onclick="showSBPPaymentForm()">Оплатить через СБП</button>
+            </div>
+        </div>
+
+        <!-- Форма оплаты картой -->
+        <div id="card-payment-form" class="payment-form">
+            <h3>Оплата банковской картой</h3>
+            <form id="card-form">
+                <div class="form-group">
+                    <label for="card-number">Номер карты</label>
+                    <input type="text" id="card-number" placeholder="0000 0000 0000 0000" required>
+                </div>
+                <div class="form-group">
+                    <label for="card-expiry">Срок действия</label>
+                    <input type="text" id="card-expiry" placeholder="ММ/ГГ" required>
+                </div>
+                <div class="form-group">
+                    <label for="card-cvc">CVC/CVV</label>
+                    <input type="text" id="card-cvc" placeholder="123" required>
+                </div>
+                <div class="form-group">
+                    <label for="card-amount">Сумма пополнения (руб.)</label>
+                    <input type="number" id="card-amount" placeholder="1000" min="100" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Пополнить баланс</button>
+                <button type="button" class="btn" onclick="hidePaymentForms()">Отмена</button>
+            </form>
+        </div>
+
+        <!-- Форма оплаты через СБП -->
+        <div id="sbp-payment-form" class="payment-form">
+            <h3>Оплата через СБП</h3>
+            <form id="sbp-form">
+                <div class="form-group">
+                    <label for="phone-number">Номер телефона</label>
+                    <input type="tel" id="phone-number" placeholder="+7 (XXX) XXX-XX-XX" required>
+                </div>
+                <div class="form-group">
+                    <label for="sbp-amount">Сумма пополнения (руб.)</label>
+                    <input type="number" id="sbp-amount" placeholder="1000" min="100" required>
+                </div>
+                <div class="form-group">
+                    <label for="bank-name">Банк (необязательно)</label>
+                    <input type="text" id="bank-name" placeholder="Ваш банк">
+                </div>
+                <button type="submit" class="btn btn-primary">Пополнить баланс</button>
+                <button type="button" class="btn" onclick="hidePaymentForms()">Отмена</button>
+            </form>
+        </div>
+    </section>
+
+    <section id="registration" class="container">
+        <h2 class="section-title">Начать регистрацию</h2>
+        <div class="progress-container">
+            <h3>Процесс регистрации</h3>
+            <div class="progress-bar">
+                <div class="progress" id="progress-bar" style="width: 0%;"></div>
+            </div>
+            <div class="progress-text" id="progress-text">Готово: 0%</div>
+
+            <form id="reg-form">
+                <div class="form-group">
+                    <label for="site-url">URL вашего сайта</label>
+                    <input type="url" id="site-url" placeholder="https://ваш-сайт.ru" required>
+                </div>
+                <div class="form-group">
+                    <label for="site-title">Название сайта</label>
+                    <input type="text" id="site-title" placeholder="Мой интернет-магазин" required>
+                </div>
+                <div class="form-group">
+                    <label for="site-description">Описание сайта</label>
+                    <textarea id="site-description" placeholder="Краткое описание вашего сайта (100-200 символов)"
+                        required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="site-category">Категория</label>
+                    <select id="site-category" required>
+                        <option value="">Выберите категорию</option>
+                        <option value="shop">Интернет-магазин</option>
+                        <option value="service">Услуги</option>
+                        <option value="info">Информационный сайт</option>
+                        <option value="corporate">Корпоративный сайт</option>
+                        <option value="other">Другое</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="tariff">Тарифный план</label>
+                    <select id="tariff" required>
+                        <option value="">Выберите тариф</option>
+                        <option value="small">Малый (990 руб.)</option>
+                        <option value="medium">Средний (1990 руб.)</option>
+                        <option value="large">Максимальный (3990 руб.)</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Начать регистрацию</button>
+            </form>
+        </div>
+    </section>
+
+    <section id="add-catalog" class="container">
+        <h2 class="section-title">Добавить каталог</h2>
+        <div class="add-catalog">
+            <h3>Знаете хороший каталог или доску объявлений? Добавьте его в нашу базу!</h3>
+            <p>Мы постоянно пополняем нашу базу каталогов. Если вы знаете хороший ресурс, которого у нас еще нет,
+                заполните форму ниже.</p>
+
+            <form id="catalog-form">
+                <div class="form-group">
+                    <label for="catalog-url">URL каталога</label>
+                    <input type="url" id="catalog-url" placeholder="https://каталог.ru" required>
+                </div>
+                <div class="form-group">
+                    <label for="catalog-name">Название каталога</label>
+                    <input type="text" id="catalog-name" placeholder="Название каталога" required>
+                </div>
+                <div class="form-group">
+                    <label for="catalog-category">Категория каталога</label>
+                    <select id="catalog-category" required>
+                        <option value="">Выберите категорию</option>
+                        <option value="general">Общий каталог</option>
+                        <option value="ads">Доска объявлений</option>
+                        <option value="regional">Региональный каталог</option>
+                        <option value="thematic">Тематический каталог</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="catalog-description">Описание (необязательно)</label>
+                    <textarea id="catalog-description" placeholder="Краткое описание каталога"></textarea>
+                </div>
+                <button type="submit" class="btn">Отправить каталог</button>
+            </form>
+        </div>
+    </section>
+
+    <footer id="contacts">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>AutoRegistrator</h3>
+                    <p>Автоматическая регистрация сайтов в каталогах и досках объявлений для увеличения посещаемости и
+                        улучшения SEO.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Контакты</h3>
+                    <ul>
+                        <li>Email: <a href="mailto:admin@kiridi.ru">admin@kiridi.ru</a></li>
+                        <li>Телефон: <a href="tel:89151885848">8 (915) 188-58-48</a></li>
+                        <li>Telegram: @autoregistrator_support</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Быстрые ссылки</h3>
+                    <ul>
+                        <li><a href="#features">Возможности</a></li>
+                        <li><a href="#pricing">Тарифы</a></li>
+                        <li><a href="#registration">Регистрация</a></li>
+                        <li><a href="#payment">Оплата</a></li>
+                        <li><a href="#add-catalog">Добавить каталог</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 AutoRegistrator. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Имитация процесса регистрации
+        document.getElementById('reg-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
+            let progress = 0;
+
+            const interval = setInterval(() => {
+                progress += 1;
+                progressBar.style.width = progress + '%';
+                progressText.textContent = 'Готово: ' + progress + '%';
+
+                if (progress === 100) {
+                    clearInterval(interval);
+                    progressText.innerHTML = 'Регистрация завершена! <a href="#">Скачать отчет</a>';
+                }
+            }, 50);
+        });
+
+        // Обработка формы добавления каталога
+        document.getElementById('catalog-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            alert('Спасибо! Ваш каталог отправлен на модерацию.');
+            this.reset();
+        });
+
+        // Плавная прокрутка к якорям
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Функции для работы с оплатой
+        function showCardPaymentForm() {
+            hidePaymentForms();
+            document.getElementById('card-payment-form').classList.add('active');
+        }
+
+        function showSBPPaymentForm() {
+            hidePaymentForms();
+            document.getElementById('sbp-payment-form').classList.add('active');
+        }
+
+        function hidePaymentForms() {
+            document.getElementById('card-payment-form').classList.remove('active');
+            document.getElementById('sbp-payment-form').classList.remove('active');
+        }
+
+        // Обработка формы оплаты картой
+        document.getElementById('card-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const amount = document.getElementById('card-amount').value;
+            alert(`Баланс успешно пополнен на ${amount} руб.!`);
+            this.reset();
+            hidePaymentForms();
+        });
+
+        // Обработка формы оплаты через СБП
+        document.getElementById('sbp-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const amount = document.getElementById('sbp-amount').value;
+            const phone = document.getElementById('phone-number').value;
+            alert(`На номер ${phone} отправлен запрос на пополнение баланса на ${amount} руб. Подтвердите платеж в приложении вашего банка.`);
+            this.reset();
+            hidePaymentForms();
+        });
+
+        // Маска для номера карты
+        document.getElementById('card-number').addEventListener('input', function (e) {
+            this.value = this.value.replace(/\D/g, '').replace(/(\d{4})(?=\d)/g, '$1 ');
+        });
+
+        // Маска для срока действия карты
+        document.getElementById('card-expiry').addEventListener('input', function (e) {
+            this.value = this.value.replace(/\D/g, '').replace(/(\d{2})(?=\d)/g, '$1/');
+        });
+
+        // Маска для номера телефона
+        document.getElementById('phone-number').addEventListener('input', function (e) {
+            this.value = this.value.replace(/\D/g, '').replace(/^(\d)/, '+7 ($1').replace(/^(?:\+7\s\()?(\d{3})(\d)/, '+7 ($1) $2').replace(/(\d{3})(\d)/, '$1-$2').replace(/(-\d{2})\d+?$/, '$1');
+        });
+    </script>
+</body>
+
+</html>
